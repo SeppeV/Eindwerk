@@ -1,0 +1,460 @@
+<html lang="en">
+<head>
+<title>Arduino code</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+<ul>
+    <li><a href="Home.html">Home</a></li>
+    <li><a href="Ledcube.html">Ledcube</a></li>
+  <li><a href="Arduino%20code.html">Arduino code</a></li>
+    <li><a href="Tekenschema.html">Tekening</a></li>
+  <li><a href="berekeningen.html">berekeningen</a></li>
+  <li><a href="Contact.html">Contact</a></li>
+
+</ul>
+</head>
+</head>
+<body>
+<div class="header">
+  <h1>Arduino code</h1>
+</div>
+<pre>
+<font color="#95a5a6">&#47;*</font>
+<font color="#95a5a6"> &nbsp;4x4x4 LED Cube</font>
+<font color="#95a5a6"> &nbsp;kolommen</font>
+<font color="#95a5a6"> &nbsp;[(x,y)-Pin]</font>
+<font color="#95a5a6"> &nbsp;(1,1)-13</font>
+<font color="#95a5a6"> &nbsp;(1,2)-12</font>
+<font color="#95a5a6"> &nbsp;(1,3)-11</font>
+<font color="#95a5a6"> &nbsp;(1,4)-10</font>
+<font color="#95a5a6"> &nbsp;(2,1)-9</font>
+<font color="#95a5a6"> &nbsp;(2,2)-8</font>
+<font color="#95a5a6"> &nbsp;(2,3)-7</font>
+<font color="#95a5a6"> &nbsp;(2,4)-6</font>
+<font color="#95a5a6"> &nbsp;(3,1)-5</font>
+<font color="#95a5a6"> &nbsp;(3-2)-4</font>
+<font color="#95a5a6"> &nbsp;(3-3)-3</font>
+<font color="#95a5a6"> &nbsp;(3,4)-2</font>
+<font color="#95a5a6"> &nbsp;(4,1)-1</font>
+<font color="#95a5a6"> &nbsp;(4,2)-0</font>
+<font color="#95a5a6"> &nbsp;(4,3)-A5</font>
+<font color="#95a5a6"> &nbsp;(4,4)-A4</font>
+<font color="#95a5a6"> &nbsp;lagen</font>
+<font color="#95a5a6"> &nbsp;[lagen-Pin]</font>
+<font color="#95a5a6"> &nbsp;a-A0</font>
+<font color="#95a5a6"> &nbsp;b-A1</font>
+<font color="#95a5a6"> &nbsp;c-A2</font>
+<font color="#95a5a6"> &nbsp;d-A3</font>
+<font color="#95a5a6">*&#47;</font>
+<font color="#434f54">&#47;&#47;led kolommen</font>
+<font color="#00979c">int</font> <font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">16</font><font color="#000000">]</font> <font color="#434f54">=</font> <font color="#000000">{</font><font color="#000000">13</font><font color="#434f54">,</font> <font color="#000000">12</font><font color="#434f54">,</font> <font color="#000000">11</font><font color="#434f54">,</font> <font color="#000000">10</font><font color="#434f54">,</font> <font color="#000000">9</font><font color="#434f54">,</font> <font color="#000000">8</font><font color="#434f54">,</font> <font color="#000000">7</font><font color="#434f54">,</font> <font color="#000000">6</font><font color="#434f54">,</font> <font color="#000000">5</font><font color="#434f54">,</font> <font color="#000000">4</font><font color="#434f54">,</font> <font color="#000000">3</font><font color="#434f54">,</font> <font color="#000000">2</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#434f54">,</font> <font color="#00979c">A5</font><font color="#434f54">,</font> <font color="#00979c">A4</font><font color="#000000">}</font><font color="#000000">;</font>
+<font color="#434f54">&#47;&#47;led lagen</font>
+<font color="#00979c">int</font> <font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">4</font><font color="#000000">]</font> <font color="#434f54">=</font> <font color="#000000">{</font><font color="#00979c">A3</font><font color="#434f54">,</font> <font color="#00979c">A2</font><font color="#434f54">,</font> <font color="#00979c">A1</font><font color="#434f54">,</font> <font color="#00979c">A0</font><font color="#000000">}</font><font color="#000000">;</font>
+
+<font color="#00979c">int</font> <font color="#000000">tijd</font> <font color="#434f54">=</font> <font color="#000000">250</font><font color="#000000">;</font>
+
+<font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font>
+<font color="#000000">{</font>
+ &nbsp;<font color="#434f54">&#47;&#47;instellingen output rijen</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">}</font>
+ &nbsp;<font color="#434f54">&#47;&#47;instellingen lagen output</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font> <font color="#000000">{</font>
+
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+
+
+<font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progA</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progB</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progC</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progD</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progE</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progF</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesaan</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">progG</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#000000">}</font>
+
+<font color="#434f54">&#47;&#47;werkt A &#47;&#47;2. Programmeeropdracht 1: laat elke LED kolom om de beurt 50 ms branden.</font>
+<font color="#434f54">&#47;&#47;werkt B &#47;&#47;3. Programmeeropdracht 2: laat elke LED rij om de beurt 50 ms branden.</font>
+<font color="#434f54">&#47;&#47;werkt C &#47;&#47;4. Laat elke LED om de beurt 50 ms branden. Ga de rij af</font>
+<font color="#434f54">&#47;&#47;werkt D &#47;&#47;5. &nbsp;Laat elke LED om de beurt 50 ms branden. Ga de rij af. Eens je onder bent ga je van daar uit terug naar boven.</font>
+<font color="#434f54">&#47;&#47;werkt E &#47;&#47;6. Laat elke LED om de beurt 50 ms branden. Laat de arduino kiezen welke LED aan de beurt is.</font>
+<font color="#434f54">&#47;&#47;werkt F &#47;&#47;7. Regendruppel effect. Laat binnen 1 kolom de LED&#39;s om de beurt branden van boven naar beneden. Laat de arduino willekeurig kiezen welke kolom aan de beurt is.</font>
+<font color="#434f54">&#47;&#47;werkt G &#47;&#47;8. Laat alle LED&#39;s gelijktijdig aan en uit gaan. Versnel dit elke keer tot de LED constant branden.</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progA</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">j</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">j</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">j</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">j</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">50</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht 50ms</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progB</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom i laag</font>
+ &nbsp;<font color="#000000">}</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag i hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">tijd</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag i laag</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progC</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;zet alles uit</font>
+<font color="#434f54">&#47;&#47; &nbsp;for(int i = 0; i&lt;1; i++)</font>
+<font color="#434f54">&#47;&#47; &nbsp;{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47;0-3</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">count</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">count</font> <font color="#434f54">!=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">count</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#434f54">-</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen hoog zetten</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">&lt;</font><font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#434f54">-</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen laag zetten</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47;4-7</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">count</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">count</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">count</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen hoog zetten</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">&lt;</font><font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen laag zetten</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47;8-11</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">count</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">count</font> <font color="#434f54">!=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">count</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#434f54">-</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen hoog zetten</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">&lt;</font><font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#434f54">-</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen laag zetten</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47;12-15</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">count</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">count</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">count</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen hoog zetten</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">&lt;</font><font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">count</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;lagen laag zetten</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progD</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> &nbsp;<font color="#434f54">&#47;&#47;zet alles uit</font>
+
+<font color="#434f54">&#47;&#47;rij 1</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 hoog</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom i laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom i hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font><font color="#434f54">&#47;&#47;laag 2 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 hoog</font>
+
+<font color="#434f54">&#47;&#47;rij 2</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">4</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">4</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 4 hoog</font>
+
+<font color="#434f54">&#47;&#47;rij 3</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 hoog</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">4</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 4 hoog</font>
+
+<font color="#434f54">&#47;&#47;rij 4</font>
+
+<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 hoog</font>
+ &nbsp;
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">12</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 hoog</font>
+
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">16</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">8</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">i</font> <font color="#434f54">-</font> <font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kolom I hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font><font color="#434f54">&#47;&#47;laag 2 hoog</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">4</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 4 hoog</font>
+ &nbsp;
+<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progE</font><font color="#000000">(</font><font color="#000000">)</font>
+<font color="#000000">{</font>
+ &nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font><font color="#000000">20</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">+=</font><font color="#000000">1</font><font color="#000000">)</font> <font color="#434f54">&#47;&#47;herhaal het 20x</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">randomlagen</font> <font color="#434f54">=</font> <font color="#d35400">random</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font><font color="#000000">4</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kies random laag</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">randomkolom</font> <font color="#434f54">=</font> <font color="#d35400">random</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font><font color="#000000">16</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;kies random kolom</font>
+ &nbsp;
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">randomlagen</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;1 randomlaag hoog</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">randomkolom</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;1 randomkolom laag</font>
+ &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht een bepaalde 100</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">randomlagen</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;1 randomlaag laag</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">randomkolom</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;1 randomkolom hoog</font>
+ &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht een bepaalde 100</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progF</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">!=</font> <font color="#000000">20</font><font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">+=</font> <font color="#000000">1</font><font color="#000000">)</font> <font color="#434f54">&#47;&#47;herhaal het 20x</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#00979c">int</font> <font color="#000000">randomkolom</font> <font color="#434f54">=</font> <font color="#d35400">random</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">16</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">randomkolom</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;randomkolom laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">tijd</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">0</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 0 laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">tijd</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">1</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 1 laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">tijd</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">2</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 2 laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag 3 hoog</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">tijd</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">lagen</font><font color="#000000">[</font><font color="#000000">3</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;laag &nbsp;laag</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">kolom</font><font color="#000000">[</font><font color="#000000">randomkolom</font><font color="#000000">]</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;randomkolom hoog</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+<pre>
+<font color="#00979c">void</font> <font color="#000000">progG</font><font color="#000000">(</font><font color="#000000">)</font>
+<font color="#000000">{</font>
+ &nbsp;<font color="#5e6d03">for</font><font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font><font color="#434f54">=</font><font color="#000000">200</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">&gt;</font><font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">=</font><font color="#000000">i</font><font color="#434f54">-</font><font color="#000000">10</font><font color="#000000">)</font>
+ &nbsp;<font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">allesaan</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;zet alle leds aan</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">i</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">allesuit</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;zet alle leds uit</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">i</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;wacht bepaalde tijd</font>
+ &nbsp;<font color="#000000">}</font>
+<font color="#000000">}</font>
+
+</pre>
+</pre>
+</pre>
+</pre>
+</pre>
+</pre>
+</pre>
+</pre>
+</body>
+</html>

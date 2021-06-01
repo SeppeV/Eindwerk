@@ -1,1 +1,1 @@
-eindwerk-seppe.netlify.app
+https://eindwerk-seppe.netlify.app/
